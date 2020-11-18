@@ -29,6 +29,9 @@ public class Voiture {
 	 */
 	public void entreAuGarage(Garage g) throws Exception {
 		// Et si la voiture est déjà dans un garage ?
+                if(this.estDansUnGarage()){
+                    throw new Exception ("The car is already in a Garage");
+                }
 		Stationnement s = new Stationnement(this, g);
 		myStationnements.add(s);
 	}
@@ -40,28 +43,46 @@ public class Voiture {
 	 * @throws java.lang.Exception si la voiture n'est pas dans un garage
 	 */
 	public void sortDuGarage() throws Exception {
-		throw new UnsupportedOperationException("Pas encore implémenté");
-		// TODO: Implémenter cette méthode
-		// Trouver le dernier stationnement de la voiture
-		// Terminer ce stationnement
-	}
+		if (this.estDansUnGarage()){                                       
+                    Stationnement lastStationnement = myStationnements.get(this.myStationnements.size()-1);
+                    lastStationnement.terminer();                                      
+                }
+                else {
+                    throw new Exception("The Car is not in the garage yet");
+                }
+                }
+	
 
 	/**
 	 * @return l'ensemble des garages visités par cette voiture
 	 */
 	public Set<Garage> garagesVisites() {
-		// TODO: Implémenter cette méthode
-		throw new UnsupportedOperationException("Pas encore implémenté");
+		Set<Garage> garagesVisites = new HashSet<>();
+                Iterator<Stationnement> stationnementsIt = myStationnements.iterator();
+                while (stationnementsIt.hasNext()){
+                     garagesVisites.add(stationnementsIt.next().getGarage());
+        }
+                return garagesVisites;
+                
 	}
 
 	/**
 	 * @return vrai si la voiture est dans un garage, faux sinon
 	 */
 	public boolean estDansUnGarage() {
-		// TODO: Implémenter cette méthode
-		throw new UnsupportedOperationException("Pas encore implémenté");
+		if (!myStationnements.isEmpty()){
+                    Stationnement lastStationnement = myStationnements.get(myStationnements.size()-1);
+                    if(lastStationnement.estEnCours()){
+                    return true;
+                    }
+                }
+                return false;
+        }
+                
+                    
 		// Vrai si le dernier stationnement est en cours
-	}
+	
+
 
 	/**
 	 * Pour chaque garage visité, imprime le nom de ce garage suivi de la liste des dates d'entrée / sortie dans ce
@@ -78,8 +99,15 @@ public class Voiture {
 	 * @param out l'endroit où imprimer (ex: System.out)
 	 */
 	public void imprimeStationnements(PrintStream out) {
-		// TODO: Implémenter cette méthode
-		throw new UnsupportedOperationException("Pas encore implémenté");
+		 Iterator<Garage> garagesIterator = this.garagesVisites().iterator();                
+                while (garagesIterator.hasNext()){
+                    Iterator<Stationnement> stationnementIt = myStationnements.iterator();
+                    Garage garage = garagesIterator.next();
+                    out.println(garage.toString());
+                    while (stationnementIt.hasNext()){
+                        Stationnement place = stationnementIt.next();
+                        if (garage.equals(place.getGarage())) {
+                            out.println(place.toString());
 	}
 
-}
+}}}}
